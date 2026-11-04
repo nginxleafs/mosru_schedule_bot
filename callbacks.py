@@ -25,22 +25,19 @@ async def back_to_week(callback: CallbackQuery):
 @router.callback_query(Homework.filter(F.action == "back_to_lessons"))
 async def back_to_lessons(callback: CallbackQuery, callback_data: Homework):
     kb = await build_schedule_keyboard(callback_data.day)
-    if callback_data.day == 6:
-        callback_data.day = -1
+    week = get_week_list()
     await callback.message.edit_text(
-        text=f"Расписание на день: {DAYS[callback_data.day + 1]}", reply_markup=kb
+        text=f"Расписание на день: {week[callback_data.day]}", reply_markup=kb
     )
-    await callback.answer()  # type: ignore
     return True
 
 
 @router.callback_query(LessonCb.filter(F.action == "show"))
 async def show_day_schedule(callback: CallbackQuery, callback_data: LessonCb):
     kb = await build_schedule_keyboard(callback_data.day)
-    if callback_data.day == 6:
-        callback_data.day = -1
+    week = get_week_list()
     await callback.message.edit_text(
-        f"Расписание на день: {DAYS[callback_data.day + 1]}", reply_markup=kb
+        f"Расписание на день: {week[callback_data.day]}", reply_markup=kb
     )
 
 
