@@ -2,11 +2,11 @@ from aiogram.filters.callback_data import CallbackData
 
 
 class LessonCb(CallbackData, prefix="lesson"):
-    day: int
+    day: str
     action: str
 
 
 class Homework(CallbackData, prefix="homework"):
-    day: int
+    day: str
     subject: int
     action: str

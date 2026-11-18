@@ -1,12 +1,9 @@
-from aiogram import Router, F
-from aiogram.types import Message
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram import F, Router
 from aiogram.filters import CommandStart
+from aiogram.types import Message
 
-from utils import get_week_list
-from callback_structs import LessonCb
-from kb import build_main_kb, build_days_kb
-from instructions import info, watch_for_weekdays_button, info_button, start_message
+from instructions import info, info_button, start_message, watch_for_weekdays_button
+from kb import build_days_kb, build_main_kb
 
 router = Router()
 

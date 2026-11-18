@@ -1,9 +1,10 @@
 import asyncio
-from aiogram import Dispatcher, Bot
-from callbacks import router as callbacks_router
-from messages import router as messages_router
 
+from aiogram import Bot, Dispatcher
+
+from callbacks import router as callbacks_router
 from constants import BOT_TOKEN
+from messages import router as messages_router
 
 
 async def main():

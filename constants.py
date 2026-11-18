@@ -1,12 +1,21 @@
-from dotenv import load_dotenv
 import os
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
-MOS_TOKEN = os.getenv("MOS_TOKEN")
-PROFILE_ID = int(os.getenv("PROFILE_ID"))
-CONTINGENT_GUID = os.getenv("CONTINGENT_GUID")
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+def required(key: str):
+    value = os.getenv(key)
+    if value is None:
+        raise ValueError(f"Environment variable {key} is required")
+    return value
+
+
+MOS_TOKEN = required("MOS_TOKEN")
+PROFILE_ID = int(required("PROFILE_ID"))
+CONTINGENT_GUID = required("CONTINGENT_GUID")
+BOT_TOKEN = required("BOT_TOKEN")
 
 DAYS = [
     "Понедельник",

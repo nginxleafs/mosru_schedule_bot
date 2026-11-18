@@ -1,5 +1,6 @@
-from constants import DAYS
 from datetime import datetime
+
+from constants import DAYS
 
 
 def get_week_list():

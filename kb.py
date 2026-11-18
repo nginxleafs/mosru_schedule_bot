@@ -1,9 +1,11 @@
-from server import get_data
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
-from callback_structs import Homework, LessonCb
-from utils import get_week_list
+from datetime import datetime, timedelta
 
-from instructions import watch_for_weekdays_button, info_button
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
+
+from callback_structs import Homework, LessonCb
+from instructions import info_button, watch_for_weekdays_button
+from server import get_data
+from utils import get_week_list
 
 
 def build_main_kb():
@@ -21,7 +23,8 @@ async def build_schedule_keyboard(day):
     builder = InlineKeyboardBuilder()
     for enum, o in enumerate(subjects):
         builder.button(
-            text=o, callback_data=Homework(day=day, subject=enum, action="homework")
+            text=o,
+            callback_data=Homework(day=day, subject=enum, action="homework"),
         )
     builder.button(text="Назад ⬅️", callback_data="back_to_week")
     builder.adjust(1)
@@ -44,7 +47,8 @@ def build_lesson_keyboard(homework: Homework):
 def build_days_kb():
     builder = InlineKeyboardBuilder()
     for d, name in enumerate(get_week_list()):
-        builder.button(text=name, callback_data=LessonCb(day=d, action="show"))
+        date = str((datetime.today() + timedelta(days=d)).date())
+        builder.button(text=name, callback_data=LessonCb(day=date, action="show"))
     builder.button(text="Закрыть ❌", callback_data="close")
     builder.adjust(1)
     return builder.as_markup()
