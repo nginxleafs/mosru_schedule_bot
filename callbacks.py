@@ -26,7 +26,7 @@ async def back_to_lessons(callback: CallbackQuery, callback_data: Homework):
     try:
         kb = await build_schedule_keyboard(callback_data.day)
     except ScheduleUnavailableError:
-        await callback.message.edit_text(
+        await callback.message.message(
             "Не удалось получить расписание на день. Попробуйте позже.",
             show_alert=True,
         )
@@ -44,7 +44,7 @@ async def show_day_schedule(callback: CallbackQuery, callback_data: LessonCb):
     try:
         kb = await build_schedule_keyboard(callback_data.day)
     except ScheduleUnavailableError:
-        await callback.message.edit_text(
+        await callback.message.answer(
             "Не удалось получить расписание на день. Попробуйте позже.",
             show_alert=True,
         )
@@ -73,9 +73,8 @@ async def show_homework(callback: CallbackQuery, callback_data: Homework):
             reply_markup=build_lesson_keyboard(callback_data),
         )
     except Exception:
-        await callback.message.edit_text(
+        await callback.message.answer(
             text="Не удалось получить данные о домашней работе. Пожалуйста, попробуйте позже.",
-            reply_markup=build_lesson_keyboard(callback_data),
         )
 
 
