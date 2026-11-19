@@ -18,7 +18,7 @@ _cache = {}
 _cache_lock = asyncio.Lock()
 
 
-async def get_data(requested_date_str):
+async def get_data(requested_date_str: str) -> dict:
     requested_date = datetime.fromisoformat(requested_date_str)
     async with _cache_lock:
         now = time.monotonic()
@@ -49,24 +49,20 @@ async def get_data(requested_date_str):
         return data
 
 
-async def get_homework(homework: Homework, data):
-    result_homework = ""
-    for i, o in enumerate(data["response"]):
-        if i == homework.subject:
-            if o["homework"] is not None:
-                if o["homework"]["descriptions"] is not None:
-                    for d in o["homework"]["descriptions"]:
-                        result_homework += d
-                else:
-                    result_homework = "Не задано"
-            else:
-                result_homework = "Не задано"
-    return result_homework
+async def get_homework(homework: Homework, data: dict) -> str:
+    lessons = data.get("response") or []
+    if not 0 <= homework.subject < len(lessons):
+        breakpoint()
+        return "Урок не найден"
+    lesson = lessons[homework.subject]
+    homework_data = lesson.get("homework") or {}
+    descriptions = homework_data.get("descriptions") or []
+    return "\n".join(descriptions) if descriptions else "Не задано"
 
 
-async def get_subject_name(homework: Homework, data):
-    result_subjects_name = ""
-    for i, o in enumerate(data["response"]):
-        if i == homework.subject and o["subject_name"]:
-            result_subjects_name = o["subject_name"]
-    return result_subjects_name
+async def get_subject_name(homework: Homework, data: dict) -> str:
+    lessons = data.get("response") or []
+    if 0 <= homework.subject < len(lessons):
+        return lessons[homework.subject].get("subject_name") or "Не определен"
+
+    return "Не определен"

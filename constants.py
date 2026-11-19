@@ -16,6 +16,7 @@ MOS_TOKEN = required("MOS_TOKEN")
 PROFILE_ID = int(required("PROFILE_ID"))
 CONTINGENT_GUID = required("CONTINGENT_GUID")
 BOT_TOKEN = required("BOT_TOKEN")
+ALLOWED_USER_IDS = str(required("ALLOWED_USER_IDS"))
 
 DAYS = [
     "Понедельник",
@@ -26,5 +27,3 @@ DAYS = [
     "Суббота",
     "Воскресенье",
 ]
-
-OWNER_ID = [5727422326]

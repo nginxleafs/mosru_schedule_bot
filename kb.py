@@ -4,7 +4,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 from callback_structs import Homework, LessonCb
 from instructions import info_button, watch_for_weekdays_button
-from server import get_data
+from server import ScheduleUnavailableError, get_data
 from utils import get_week_list
 
 
@@ -16,11 +16,16 @@ def build_main_kb():
 
 
 async def build_schedule_keyboard(day):
-    data = await get_data(day)
+    builder = InlineKeyboardBuilder()
+    try:
+        data = await get_data(day)
+    except ScheduleUnavailableError:
+        print("Расаисание не доступно попробуйте позже")
+        exit(0)
+
     subjects = []
     for d in data["response"]:
         subjects.append(d["subject_name"])
-    builder = InlineKeyboardBuilder()
     for enum, o in enumerate(subjects):
         builder.button(
             text=o,

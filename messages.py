@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from constants import OWNER_ID
+from constants import ALLOWED_USER_IDS
 from instructions import info, info_button, start_message, watch_for_weekdays_button
 from kb import build_days_kb, build_main_kb
 
@@ -16,7 +16,7 @@ async def show_schedule(message: Message):
 
 @router.message(CommandStart())
 async def start(message: Message):
-    if message.from_user.id in OWNER_ID:
+    if str(message.from_user.id) in ALLOWED_USER_IDS:
         await message.answer(
             start_message,
             reply_markup=build_main_kb(),

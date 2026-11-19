@@ -9,6 +9,7 @@ from callback_structs import Homework, LessonCb
 from constants import DAYS
 from kb import build_days_kb, build_lesson_keyboard, build_schedule_keyboard
 from server import ScheduleUnavailableError, get_data, get_homework, get_subject_name
+from schoolmospy.utils.exceptions import *
 
 router = Router()
 
