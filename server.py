@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 from schoolmospy import StudentClient
+from schoolmospy.utils.exceptions import AuthError
 
 from callback_structs import Homework
 from constants import CONTINGENT_GUID, MOS_TOKEN, PROFILE_ID
@@ -42,8 +43,12 @@ async def get_data(requested_date_str: str) -> dict:
                 to_date=request_datetime,
                 contingent_guid=CONTINGENT_GUID,
             )
+        except AuthError:
+            raise AuthError("Срок действия токена истек. Пожалуйста, обновите его.")
         except Exception as e:
-            raise ScheduleUnavailableError("Не удалось получить расписание") from e
+            raise ScheduleUnavailableError(
+                "Не удалось получить расписание. Попробуйте позже"
+            )
         data = events.model_dump()
         _cache[requested_date] = (time.monotonic() + CACHE_TTL, data)
         return data
@@ -52,7 +57,6 @@ async def get_data(requested_date_str: str) -> dict:
 async def get_homework(homework: Homework, data: dict) -> str:
     lessons = data.get("response") or []
     if not 0 <= homework.subject < len(lessons):
-        breakpoint()
         return "Урок не найден"
     lesson = lessons[homework.subject]
     homework_data = lesson.get("homework") or {}
@@ -65,4 +69,4 @@ async def get_subject_name(homework: Homework, data: dict) -> str:
     if 0 <= homework.subject < len(lessons):
         return lessons[homework.subject].get("subject_name") or "Не определен"
 
-    return "Не определен"
+    return "Не определеный урок"

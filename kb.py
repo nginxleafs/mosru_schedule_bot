@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
+from schoolmospy.utils.exceptions import AuthError
 
 from callback_structs import Homework, LessonCb
 from instructions import info_button, watch_for_weekdays_button
@@ -20,8 +21,15 @@ async def build_schedule_keyboard(day):
     try:
         data = await get_data(day)
     except ScheduleUnavailableError:
-        print("Расаисание не доступно попробуйте позже")
-        exit(0)
+        builder.button(text="Расписание недоступно, попробуйте позже.")
+        builder.button(text="Назад ⬅️", callback_data="back_to_week")
+        builder.adjust(1)
+        return builder.as_markup()
+    except AuthError:
+        builder.button(text="Срок действия вашего токена истек.", callback_data="error")
+        builder.button(text="Назад ⬅️", callback_data="back_to_week")
+        builder.adjust(1)
+        return builder.as_markup()
 
     subjects = []
     for d in data["response"]:

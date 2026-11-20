@@ -60,23 +60,23 @@ async def show_day_schedule(callback: CallbackQuery, callback_data: LessonCb):
 async def show_homework(callback: CallbackQuery, callback_data: Homework):
     await callback.answer()
     try:
-        try:
-            data = await get_data(callback_data.day)
-        except ScheduleUnavailableError:
-            await callback.message.answer(
-                text=f"Не удалось получить данные о дне. Попробуйте позже."
-            )
-            return
-        subject_name = await get_subject_name(callback_data, data)
-        homework = await get_homework(callback_data, data)
-        await callback.message.edit_text(
-            text=f"Домашняя работа по: {subject_name}\n{homework}",
-            reply_markup=build_lesson_keyboard(callback_data),
-        )
-    except Exception:
+        data = await get_data(callback_data.day)
+    except ScheduleUnavailableError:
         await callback.message.answer(
-            text="Не удалось получить данные о домашней работе. Пожалуйста, попробуйте позже.",
+            text=f"Не удалось получить данные о дне. Попробуйте позже."
         )
+        return
+    except AuthError:
+        await callback.message.answer(
+            text=f"Ваш токен просрочен. Пожалуйста, обновите его."
+        )
+        return
+    subject_name = await get_subject_name(callback_data, data)
+    homework = await get_homework(callback_data, data)
+    await callback.message.edit_text(
+        text=f"Домашняя работа по: {subject_name}\n{homework}",
+        reply_markup=build_lesson_keyboard(callback_data),
+    )
 
 
 @router.callback_query(F.data == "close")
