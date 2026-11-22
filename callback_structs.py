@@ -1,12 +1,17 @@
 from aiogram.filters.callback_data import CallbackData
 
 
-class LessonCb(CallbackData, prefix="lesson"):
-    day: str
+class Day(CallbackData, prefix="day"):
+    date: str
     action: str
 
 
 class Homework(CallbackData, prefix="homework"):
-    day: str
-    subject: int
+    date: str
+    subject_index: int
+    action: str
+
+
+class Lesson(CallbackData, prefix="lesson"):
+    date: str
     action: str
