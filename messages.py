@@ -15,13 +15,13 @@ router = Router()
 
 
 @router.message(F.text == check_schedule_button_text)
-async def show_week(message: Message):
+async def show_week(message: Message) -> None:
     week_kb = build_week_kb()
     await message.answer(text="Выберите день", reply_markup=week_kb)
 
 
 @router.message(CommandStart())
-async def start(message: Message):
+async def start(message: Message) -> None:
     if str(message.from_user.id) in ALLOWED_USER_IDS:
         main_kb = build_main_kb()
         await message.answer(
@@ -35,5 +35,5 @@ async def start(message: Message):
 
 
 @router.message(F.text == info_button_text)
-async def print_info(message: Message):
+async def print_info(message: Message) -> None:
     await message.answer(text=bot_info_text)

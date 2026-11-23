@@ -14,14 +14,14 @@ router = Router()
 
 
 @router.callback_query(F.data == "back_to_week")
-async def back_to_week(callback: CallbackQuery):
+async def back_to_week(callback: CallbackQuery) -> None:
     await callback.answer()
     week_kb = build_week_kb()
     await callback.message.edit_text(text="Выберите день недели:", reply_markup=week_kb)
 
 
 @router.callback_query(Lesson.filter(F.action == "back_to_subjects"))
-async def back_to_lessons(callback: CallbackQuery, callback_data: Lesson):
+async def back_to_lessons(callback: CallbackQuery, callback_data: Lesson) -> None:
     await callback.answer()
     try:
         data = await get_data(requested_date_str=callback_data.date, callback=callback)
@@ -35,7 +35,7 @@ async def back_to_lessons(callback: CallbackQuery, callback_data: Lesson):
 
 
 @router.callback_query(Day.filter(F.action == "show_subjects"))
-async def show_day_schedule(callback: CallbackQuery, callback_data: Day):
+async def show_day_schedule(callback: CallbackQuery, callback_data: Day) -> None:
     await callback.answer()
     try:
         data = await get_data(requested_date_str=callback_data.date, callback=callback)
@@ -49,7 +49,7 @@ async def show_day_schedule(callback: CallbackQuery, callback_data: Day):
 
 
 @router.callback_query(Homework.filter(F.action == "show_subject_homework"))
-async def show_homework(callback: CallbackQuery, callback_data: Homework):
+async def show_homework(callback: CallbackQuery, callback_data: Homework) -> None:
     await callback.answer()
     try:
         data = await get_data(requested_date_str=callback_data.date, callback=callback)
@@ -66,6 +66,6 @@ async def show_homework(callback: CallbackQuery, callback_data: Homework):
 
 
 @router.callback_query(F.data == "close")
-async def close(callback: CallbackQuery):
+async def close(callback: CallbackQuery) -> None:
     await callback.answer()
     await callback.message.delete()
