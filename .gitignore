@@ -7,4 +7,5 @@ venv/
 .venv/
 dist/
 build/
-main.spec
+*.spec
+logs.log

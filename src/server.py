@@ -12,6 +12,7 @@ from callback_structs import Homework
 from constants import CONTINGENT_GUID, MOS_TOKEN, PROFILE_ID
 
 logger = logging.getLogger("Server logger")
+logging.basicConfig(filename="logs.log", level=logging.DEBUG)
 
 CACHE_TTL = 5 * 60
 
@@ -115,7 +116,9 @@ def get_homework(homework: Homework, data: dict) -> str:
     homework_data = lesson.get("homework") or {}
     descriptions = homework_data.get("descriptions") or []
     result = "\n".join(descriptions) if descriptions else "Не задано"
-    logger.info("Returning homework to user: ", result)
+    logger.info(
+        f"Returning homework to user: {result}",
+    )
     return result
 
 

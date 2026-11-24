@@ -6,6 +6,11 @@ from callbacks import router as callbacks_router
 from constants import BOT_TOKEN
 from messages import router as messages_router
 
+import logging
+
+logger = logging.getLogger()
+logging.basicConfig(filename="logs.log", level=logging.INFO)
+
 
 async def main():
     bot = Bot(BOT_TOKEN)
