@@ -11,6 +11,10 @@ from instructions import (
 )
 from kb import build_week_kb, build_main_kb
 
+import logging
+
+logger = logging.getLogger(name="Messages logger")
+
 router = Router()
 
 
@@ -29,6 +33,7 @@ async def start(message: Message) -> None:
             reply_markup=main_kb,
         )
     else:
+        logger.warning("Unknown user, accsess denied: ", message.from_user.id)
         await message.answer(
             f"Вашего id нету в списке разрешенных id для доступа к боту, попросите добавить владельца ваш id:\n{message.from_user.id}"
         )
