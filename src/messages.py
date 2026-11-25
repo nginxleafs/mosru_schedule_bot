@@ -13,8 +13,7 @@ from kb import build_week_kb, build_main_kb
 
 import logging
 
-logger = logging.getLogger(name="Messages logger")
-logging.basicConfig(filename="logs.log", level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = Router()
 
@@ -27,7 +26,7 @@ async def show_week(message: Message) -> None:
 
 @router.message(CommandStart())
 async def start(message: Message) -> None:
-    if str(message.from_user.id) in ALLOWED_USER_IDS:
+    if str(message.from_user.id) in str(ALLOWED_USER_IDS):
         main_kb = build_main_kb()
         await message.answer(
             start_message_text,
@@ -40,6 +39,9 @@ async def start(message: Message) -> None:
         await message.answer(
             f"Вашего id нету в списке разрешенных id для доступа к боту, попросите добавить владельца ваш id:\n{message.from_user.id}"
         )
+        want_to_add = input(f"Are you want to add id {message.from_user.id}: ")
+        if want_to_add == "y" or "yes":
+            ALLOWED_USER_IDS.append(message.from_user.id)
 
 
 @router.message(F.text == info_button_text)

@@ -10,6 +10,10 @@ from constants import DAYS
 from kb import build_week_kb, build_homework_kb, build_subjects_kb
 from server import ScheduleUnavailableError, get_data, get_homework, get_subject_name
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 router = Router()
 
 

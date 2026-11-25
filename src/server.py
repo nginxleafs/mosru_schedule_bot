@@ -11,8 +11,8 @@ from exceptions import ScheduleUnavailableError
 from callback_structs import Homework
 from constants import CONTINGENT_GUID, MOS_TOKEN, PROFILE_ID
 
-logger = logging.getLogger("Server logger")
-logging.basicConfig(filename="logs.log", level=logging.DEBUG)
+
+logger = logging.getLogger(__name__)
 
 CACHE_TTL = 5 * 60
 
@@ -49,16 +49,16 @@ async def _get_data(requested_date_str: str) -> dict:
                 timeout=10.0,
             )
         except AuthError:
-            logger.error("Authentication error from server.")
+            logger.error("Authentication error from school.mos.ru api.")
             raise
         except NotFoundError:
-            logger.error("Not found error from server.")
+            logger.error("Not found error from school.mos.ru api.")
             raise
         except ServerError:
-            logger.error("ServerError from server.")
+            logger.error("ServerError from school.mos.ru api.")
             raise
         except asyncio.TimeoutError:
-            logger.error("Server is not responding.")
+            logger.error("School.mos.ru api server is not responding.")
             raise
         except Exception:
             raise
@@ -108,7 +108,7 @@ async def get_data(requested_date_str: str, callback: CallbackQuery) -> dict:
 def get_homework(homework: Homework, data: dict) -> str:
     lessons = data.get("response") or []
     if not 0 <= homework.subject_index < len(lessons):
-        logger.warning(
+        logger.error(
             f"Subject is out of range: subject index is {homework.subject_index}, but the length of received data is {len(lessons)}"
         )
         return "Урок не найден"
@@ -117,7 +117,8 @@ def get_homework(homework: Homework, data: dict) -> str:
     descriptions = homework_data.get("descriptions") or []
     result = "\n".join(descriptions) if descriptions else "Не задано"
     logger.info(
-        f"Returning homework to user: {result}",
+        f"Recognized homework: %s",
+        result,
     )
     return result
 
@@ -126,7 +127,8 @@ def get_subject_name(homework: Homework, data: dict) -> str:
     lessons = data.get("response") or []
     if 0 <= homework.subject_index < len(lessons):
         lesson = lessons[homework.subject_index].get("subject_name") or "Не определен"
-        logger.info(f"Found subject name: {lesson}")
+        logger.debug(f"Found subject name: {lesson}")
         return lesson
 
+    logger.error("Unknown lesson with index=%s", homework.subject_index)
     return "Не определеный урок"

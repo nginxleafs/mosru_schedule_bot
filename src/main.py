@@ -3,13 +3,19 @@ import asyncio
 from aiogram import Bot, Dispatcher
 
 from callbacks import router as callbacks_router
-from constants import BOT_TOKEN
+from constants import BOT_TOKEN, LOG_LEVEL
 from messages import router as messages_router
 
 import logging
 
-logger = logging.getLogger()
-logging.basicConfig(filename="logs.log", level=logging.INFO)
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("logs.log", encoding="utf-8"),
+        logging.StreamHandler(),
+    ],
+)
 
 
 async def main():
